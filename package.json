@@ -1,5 +1,5 @@
 {
-  "name": "locman",
+  "name": "monagree-locs",
   "version": "1.0.0",
   "description": "States and LGAs in Nigeria (with GPS coordinates)",
   "main": "dist/index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/monagree/locman.git"
+    "url": "git+https://github.com/monagree/monagree-locs.git"
   },
   "keywords": [
     "Monagree",
@@ -23,7 +23,7 @@
   "author": "Monagree",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/monagree/locman/issues"
+    "url": "https://github.com/monagree/monagree-locs/issues"
   },
   "homepage": "developers.monagree.com",
   "devDependencies": {
