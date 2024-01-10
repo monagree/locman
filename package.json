@@ -1,0 +1,34 @@
+{
+  "name": "locman",
+  "version": "1.0.0",
+  "description": "States and LGAs in Nigeria (with GPS coordinates)",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "obs": "javascript-obfuscator dist --output dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monagree/locman.git"
+  },
+  "keywords": [
+    "Monagree",
+    "Nigeria",
+    "States",
+    "LGAs",
+    "GPS",
+    "Location"
+  ],
+  "author": "Monagree",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/monagree/locman/issues"
+  },
+  "homepage": "developers.monagree.com",
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.0",
+    "@types/node": "^20.10.8",
+    "typescript": "^5.3.3"
+  }
+}
