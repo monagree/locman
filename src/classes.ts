@@ -1,5 +1,5 @@
 
-interface stateData {
+interface mlocData {
     name: string;
     center: {
         lat:number,
@@ -9,8 +9,8 @@ interface stateData {
 
 export class mLoc{
     id:string
-    data:stateData
-    constructor(id:string,data:stateData){
+    data:mlocData
+    constructor(id:string,data:mlocData){
         this.id = id
         this.data = data;
     }
