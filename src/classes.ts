@@ -14,4 +14,16 @@ export class mLoc{
         this.id = id
         this.data = data;
     }
+    getId(){
+        return this.id
+    }
+    getName(){
+        return this.data.name
+    }
+    getLatitude(){
+        return this.data.center.lat
+    }
+    getLongitude(){
+        return this.data.center.lon
+    }
 }
