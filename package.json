@@ -1,6 +1,6 @@
 {
   "name": "monagree-locs",
-  "version": "1.0.5",
+  "version": "1.0.9",
   "description": "States and LGAs in Nigeria (with GPS coordinates)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,8 +10,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "obs": "javascript-obfuscator dist --output dist"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -32,7 +31,6 @@
   },
   "homepage": "developers.monagree.com",
   "devDependencies": {
-    "javascript-obfuscator": "^4.1.0",
     "@types/node": "^20.10.8",
     "typescript": "^5.3.3"
   }

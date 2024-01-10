@@ -1,4 +1,32 @@
-export const locs:any = {
+export interface LocsMap {
+  [key: string]: {
+    name: string;
+    center: {
+      lat: string;
+      lon: string;
+    };
+    states?: {
+      [key: string]: {
+        name: string;
+        center: {
+          lat: string;
+          lon: string;
+        };
+        lgas?: {
+          [key:string]: {
+            name: string;
+            center: {
+              lat: string;
+              lon: string;
+            };
+          };
+        }
+      };
+    };
+  };
+}
+
+export const locs:LocsMap = {
   "00": {
     "name": "Nigeria",
     "center": {

@@ -1,9 +1,9 @@
 
-interface mlocData {
+export interface mlocData {
     name: string;
     center: {
-        lat:number,
-        lon:number
+        lat:string,
+        lon:string
     };
   }
 
