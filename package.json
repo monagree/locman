@@ -1,7 +1,7 @@
 {
   "name": "monagree-locs",
-  "version": "1.0.9",
-  "description": "States and LGAs in Nigeria (with GPS coordinates)",
+  "version": "2.0.1",
+  "description": "All countries + States and LGAs in Nigeria (with GPS coordinates)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -17,6 +17,7 @@
     "url": "git+https://github.com/monagree/monagree-locs.git"
   },
   "keywords": [
+    "countries",
     "Monagree",
     "Nigeria",
     "States",

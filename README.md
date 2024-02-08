@@ -4,7 +4,9 @@ To install, run:
 
 > npm install monagree-locs
 
-> Only showing locations in Nigeria for now
+> Now Shows all countries
+
+> Only showing states & cities in Nigeria for now
 
 Please enjoy this accurate & up-to-date location package from the open source team at Monagree. Monagree provides tools for devs to build ecommerce and logistics websites easily. Check out our javascript framework (CLI) on npm [monagree-tools](https://www.npmjs.com/package/monagree-tools "Monagree JS Framework"). 
 
