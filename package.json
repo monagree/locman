@@ -1,7 +1,7 @@
 {
-  "name": "monagree-locs",
-  "version": "2.0.1",
-  "description": "All countries + States and LGAs in Nigeria (with GPS coordinates)",
+  "name": "monagree",
+  "version": "1.0.0",
+  "description": "Monagree Javascript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -14,25 +14,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/monagree/monagree-locs.git"
+    "url": "git+https://github.com/monagree/monagree-js-sdk.git"
   },
   "keywords": [
-    "countries",
+    "SDK",
     "Monagree",
-    "Nigeria",
-    "States",
-    "LGAs",
-    "GPS",
-    "Location"
+    "e-commerce",
+    "logistics",
+    "delivery",
+    "Order Tracking",
+    "Payments"
   ],
   "author": "Monagree",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/monagree/monagree-locs/issues"
+    "url": "https://github.com/monagree/monagree-js-sdk/issues"
   },
   "homepage": "developers.monagree.com",
   "devDependencies": {
     "@types/node": "^20.10.8",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.7"
   }
 }

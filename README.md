@@ -1,14 +1,18 @@
-# Monagree Location Picker
+# Monagree Javascript SDK
 
 To install, run:
 
-> npm install monagree-locs
+> npm install monagree
 
-> Now Shows all countries
+## Documentation
 
-> Only showing states & cities in Nigeria for now
+Please find extensive documentation of the SDK on the [Developer Documentation Page](https://docs.monagree.com "Monagree Developer Documentation")
 
-Please enjoy this accurate & up-to-date location package from the open source team at Monagree. Monagree provides tools for devs to build ecommerce and logistics websites easily. Check out our javascript framework (CLI) on npm [monagree-tools](https://www.npmjs.com/package/monagree-tools "Monagree JS Framework"). 
+
+## Authentication
+
+You will need a Monagree Developer ID to use this SDK. Visit the [developer dashboard](https://developers.monagree.com) to get one.
+
 
 ## Become a Monagree Developer
 
