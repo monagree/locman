@@ -1,6 +1,6 @@
 {
   "name": "monagree",
-  "version": "1.0.0",
+  "version": "1.0.15",
   "description": "Monagree Javascript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

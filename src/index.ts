@@ -120,7 +120,7 @@ export class monagree{
       callback(new monagreeActions(false,initErr))
       return
     }
-    this.fire.getQuery(getRootLoc()+`/stores/${this.config.bid}/cats`, (task)=>{
+    this.fire.getQuery(getRootLoc()+`/stores/${this.config.bid}`,'cats',100, (task)=>{
       if(task.isSuccessful()){
         const tem:catalogData[] = []
         task.getResult().forEach((doc:any)=>{
@@ -131,7 +131,7 @@ export class monagree{
       }else{
         callback(new monagreeActions(false,task.getEr()))
       }
-    })
+    },{})
   }
 
   /**
@@ -169,16 +169,7 @@ export class monagree{
       opts.callback(new monagreeActions(false,initErr))
       return
     }
-    const qry:any = {
-        'limit': opts.limit ?? 10,
-    }
-    if(opts.catalogID){
-      qry['where'] = `c==${opts.catalogID}`
-    }
-    if(opts.lastId){
-      qry['startAfter'] = opts.lastId
-    }
-    this.fire.getQuery(getRootLoc()+`/stores/${this.config.bid}/products`, (task)=>{
+    this.fire.getQuery(getRootLoc()+`/stores/${this.config.bid}`,'products',opts.limit ?? 10, (task)=>{
       if(task.isSuccessful()){
         const tem:productData[] = []
         task.getResult().forEach((doc:any)=>{
@@ -189,7 +180,10 @@ export class monagree{
       }else{
         opts.callback(new monagreeActions(false,task.getEr()))
       }
-    },qry)
+    },{
+      startAt: opts.lastId,
+      wheres:opts.catalogID?{commands:[{field:'c',op:'EQUAL',value:opts.catalogID}]}:undefined
+    })
   }
   
 

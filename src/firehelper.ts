@@ -20,6 +20,10 @@ export function getACT(finise:(task:monagreeActions)=>void){ //TODO Do they expi
     });
 }
 
+export type queryOperator = 'LESS_THAN' | 'LESS_THAN_OR_EQUAL'| 'GREATER_THAN'| 'GREATER_THAN_OR_EQUAL'| 'EQUAL'| 'NOT_EQUAL'| 'ARRAY_CONTAINS'| 'IN'| 'ARRAY_CONTAINS_ANY'| 'NOT_IN';
+export type orderByDirection = 'ASCENDING' | 'DESCENDING'
+export type whereOps = 'AND' | 'OR'
+
 export class fireMan{
   accessToken?:string;
 
@@ -28,13 +32,16 @@ export class fireMan{
   }
 
   prepare(finise:(task:monagreeActions)=>void, forceNew?:boolean){
-    if(!forceNew && localStorage.getItem('atk_time')!=null && parseFloat(localStorage.getItem('atk_time')!)-Date.now() < token_expiry ){
+    if(!forceNew && localStorage.getItem('atk_time')!=null && Date.now()-parseFloat(localStorage.getItem('atk_time')!) < token_expiry ){
       this.accessToken = localStorage.getItem('atk_val')!
+      finise(new monagreeActions(true,this.accessToken))
       return
     }
     getACT((task)=>{
       if(task.success){
         this.accessToken = task.message;
+        localStorage.setItem('atk_val',this.accessToken)
+        localStorage.setItem('atk_time',Date.now().toString())
       }
       finise(task)
     });
@@ -91,7 +98,7 @@ export class fireMan{
       })
       .catch(error => {
         console.error('Error creating document:', error.response ? error.response.data : error.message);
-        task(new fsSet(false,error))
+        task(new fsSet(false,error.message))
       });
   }
   
@@ -119,57 +126,98 @@ export class fireMan{
       })
       .catch(error => {
         console.error('Error retrieving document:', error.response ? error.response.data : error.message);
-        task(new fsTask(false,error))
+        task(new fsTask(false,error.message))
       });
   }
 
-  getQuery(path:string,task:(task:queryTask)=>void,queryOptions?: any){
+  getQuery(docPath:string,colId:string,limit:number,task:(task:queryTask)=>void,
+  opts:{
+    orderBys?:{field:string,direction:orderByDirection}[],
+    wheres?:{op?:whereOps,commands:{field:string,value:string,op:queryOperator}[]},
+    startAt?:number
+  },){
     if(!this.accessToken){
       this.prepare((ok)=>{
         if(ok){
-          this.getQuery(path,task,queryOptions)
+          this.getQuery(docPath,colId,limit,task,opts)
         }else{
           task(new queryTask(false))
         }
       })
       return
     }
-    const firestoreUrl = `https://firestore.googleapis.com/v1/projects/monagree-apps/databases/(default)/documents/${path}`;
+    const firestoreUrl = `https://firestore.googleapis.com/v1/projects/monagree-apps/databases/(default)/documents/${docPath}:runQuery`;
     const headers = {
       'Authorization': `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json',
     };
-    if(queryOptions){
-      // Add query parameters for filtering
-      const queryParams = {
-          ...queryOptions, // Pass additional query options
-          // Example where query: where: 'fieldName', '==', 'value'
-          // You can extend this to support multiple where clauses if needed
-      };
-      // Make the GET request with query parameters
-      axios.get(firestoreUrl, { headers, params: queryParams })
-      .then(response => {
-          // Process the retrieved data
-          const documents = response.data.documents;
-          task(new queryTask(true, undefined, documents));
-      })
-      .catch(error => {
-          console.error('Error retrieving documents:', error.response ? error.response.data : error.message);
-          task(new queryTask(false));
-      });
-    }else{
-      // Make the GET request to retrieve all documents in the collection
-      axios.get(firestoreUrl, { headers })
-      .then(response => {
-        // Process the retrieved data
-        const documents = response.data.documents;
-        task(new queryTask(true,undefined,documents))
-      })
-      .catch(error => {
-        console.error('Error retrieving documents:', error.response ? error.response.data : error.message);
-        task(new queryTask(false))
-      });
+    // Add query parameters for filtering
+    const queryParams:any = {
+      structuredQuery: {
+        from: [{ collectionId :colId }],
+        limit: limit,
+      }
+    };
+    if(opts.orderBys){
+      let ob = []
+      for(const odb of opts.orderBys){
+        ob.push({ field: { fieldPath: odb.field}, direction: odb.direction })
+      }
+      queryParams['structuredQuery']['orderBy'] = ob
     }
+    if(opts.wheres){
+      if(opts.wheres.op){
+        let filters = []
+        for(const cmd of opts.wheres.commands){
+          filters.push({
+            fieldFilter: {
+              field: { fieldPath: cmd.field },
+              op: cmd.op,
+              value: { stringValue: cmd.value }
+            }
+          })
+        }
+        queryParams['structuredQuery']['where'] = {
+          compositeFilter:{
+            op: opts.wheres.op,
+            filters:filters
+          }
+        }
+      }else{
+        queryParams['structuredQuery']['where'] = {
+          fieldFilter: {
+            field: { fieldPath: opts.wheres.commands[0].field },
+            op: opts.wheres.commands[0].op,
+            value: { stringValue: opts.wheres.commands[0].value }
+          }
+        }
+      }
+    }
+    if(opts.startAt){
+      queryParams['structuredQuery']['startAt'] = {
+        values: [{ integerValue: opts.startAt }]
+      }
+    }
+    // Make the POST request with query parameters
+    axios.post(firestoreUrl, queryParams, { headers })
+    .then(response => {
+        // Process the retrieved data
+        console.log(response.data)
+        const documents = response.data.map((doc:any) => {
+          if (doc.document) {
+            return {
+              name: doc.document.name,
+              fields: doc.document.fields
+            };
+          }
+          return null;
+        }).filter((doc:any) => doc !== null);
+        task(new queryTask(true, undefined, documents));
+    })
+    .catch(error => {
+        console.error('Error retrieving documents:', error.response ? error.response.data : error.message);
+        task(new queryTask(false));
+    });
   }
 }
 
@@ -266,17 +314,20 @@ class queryTask{
   }
 
   
-function getEC(e:any):number{
-    if(e.startsWith('[firebase_auth/network-request-failed]')){
-      return 0;
-    }
-    if(e.startsWith('[firebase_auth/wrong-password]')){
-      return 1;
-    }if(e.startsWith('[firebase_auth/too-many-requests]')){
-      return 2;
-    }
-    if(e.startsWith('[firebase_auth/user-not-found]')){
-      return 4;
+function getEC(ez:any):number{
+    if(ez != undefined){
+      const e = ez.toString()
+      if(e.startsWith('[firebase_auth/network-request-failed]')){
+        return 0;
+      }
+      if(e.startsWith('[firebase_auth/wrong-password]')){
+        return 1;
+      }if(e.startsWith('[firebase_auth/too-many-requests]')){
+        return 2;
+      }
+      if(e.startsWith('[firebase_auth/user-not-found]')){
+        return 4;
+      }
     }
     return 3;
   }

@@ -59,7 +59,11 @@ export class storeData{
         return getData(this.doc, 'c2')
     }
     getSubcats(){
-        return this.doc.fields['c3'].arrayValue as string[]
+        const tvals:string[] = []
+        for(const key in this.doc.fields['c3'].arrayValue.values){
+            tvals.push(this.doc.fields['c3'].arrayValue.values[key].stringValue)
+        }
+        return tvals
     }
     getL1(){
         return getData(this.doc, 'l1')
